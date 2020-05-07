@@ -7,11 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ActionResultCoreMVC.Models;
 using Microsoft.AspNetCore.Components;
+using ActionResultCoreMVC.Data;
 
 namespace ActionResultCoreMVC.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext db;
+
+        public HomeController(ApplicationDbContext context)
+        {
+            db = context;
+        }
         public IActionResult Index()
         {
             return View();
@@ -28,8 +35,8 @@ namespace ActionResultCoreMVC.Controllers
 
         public JsonResult JsonResult()
         {
-            var name = "Farhan Ahmed";
-            return Json(new { data=name});
+            var employee = db.Employees.ToList();
+            return Json(new { data=employee});
         }
 
         public ContentResult ContentResult()
@@ -38,7 +45,8 @@ namespace ActionResultCoreMVC.Controllers
         }
         public PartialViewResult PartialViewResult()
         {
-            return PartialView("_PartialView");
+            var employee = db.Employees.ToList();
+            return PartialView("_PartialView",employee);
         }
 
         public EmptyResult EmptyResult()
